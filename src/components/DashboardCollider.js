@@ -10,12 +10,14 @@ import {
   detectBinningStrategy,
   parseCustomDate,
 } from "../utils/utils";
+import BinaryOrbit from "../components/BinaryOrbit";
 
 Chart.register(ChartDataLabels, ...registerables);
 
 /* Collider Dashboard */
 
 const DashboardCollider = ({
+  isMetaLoading,
   emissionsData,
   collisionsData,
   eventsOverTime,
@@ -34,6 +36,11 @@ const DashboardCollider = ({
   const [lineChartData, setLineChartData] = useState(null);
   const [netDistribution, setNetDistribution] = useState(null);
   const [winnerDistribution, setWinnerDistribution] = useState(null);
+  const [isLoading, setIsLoading] = useState(isMetaLoading);
+
+  useEffect(() => {
+    setIsLoading(isMetaLoading);
+  }, [isMetaLoading]);
 
   const xAxisLabelPlugin = {
     id: "xAxisLabel",
@@ -54,6 +61,8 @@ const DashboardCollider = ({
   };
 
   useEffect(() => {
+    if (isMetaLoading) return;
+
     // Prepare pie chart data for events
     setPieChartDataEmissions({
       labels: ["Photon", "Baryon"],
@@ -702,6 +711,7 @@ const DashboardCollider = ({
       },
     });
   }, [
+    isMetaLoading,
     emissionsData,
     collisionsData,
     eventsOverTime,
@@ -713,8 +723,8 @@ const DashboardCollider = ({
   ]);
 
   return (
-    <section className="mt-20 text-gray-100">
-      <div className="flex flex-row justify-between px-4 py-2 text-xl text-gray-300 text-left font-medium border border-gray-800 rounded-t-lg bg-dark-card">
+    <section className="text-gray-100 w-full">
+      <div className="flex flex-row justify-between px-4 py-2 text-xl text-gray-300 text-left font-medium border-[0.5px] border-gray-800 rounded-t-lg bg-dark-card">
         <h2 className="">Statistics</h2>
         <button
           className="text-sm text-accent-primary hover:text-gray-300"
@@ -741,112 +751,126 @@ const DashboardCollider = ({
           </div>
         </button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-black border-x border-b border-gray-800 rounded-b-lg">
-        <div className="p-4 rounded-lg">
-          <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
-            <div>{"Token Collisions"}</div>
-            <div className="relative group">
-              <div className="cursor-pointer">&#9432;</div>
-              <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
-                {`Displays the distribution of PRO & ANTI collisions in the pool`}
-              </span>
-            </div>
-          </div>
-          {pieChartDataTokens && (
-            <Pie
-              data={pieChartDataTokens}
-              options={pieChartDataTokens.options}
-            />
-          )}
+      <div className="bg-black border-x-[0.5px] border-b-[0.5px] border-gray-800 rounded-b-lg">
+      { isLoading ? (
+        <div className="flex items-center justify-center">
+          <BinaryOrbit
+            size={isMobile ? 300 : 300}
+            orbitRadius={isMobile ? 80 : 80}
+            particleRadius={isMobile ? 20 : 20}
+            padding={10}
+            invert={false}
+          />
         </div>
-        <div className="p-4 rounded-lg">
-          <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
-            <div>{"Token Emissions"}</div>
-            <div className="relative group">
-              <div className="cursor-pointer">&#9432;</div>
-              <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
-                {`Displays the distribution of BARYON & PHOTON emissions in the pool`}
-              </span>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-4 rounded-lg">
+            <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
+              <div>{"Token Collisions"}</div>
+              <div className="relative group">
+                <div className="cursor-pointer">&#9432;</div>
+                <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
+                  {`Displays the distribution of PRO & ANTI collisions in the pool`}
+                </span>
+              </div>
             </div>
-          </div>
-          {pieChartDataEmissions && (
-            <Pie
-              data={pieChartDataEmissions}
-              options={pieChartDataEmissions.options}
-            />
-          )}
-        </div>
-        <div className="p-4 rounded-lg">
-          <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
-            <div>{`Events Ranges`}</div>
-            <div className="relative group">
-              <div className="cursor-pointer">&#9432;</div>
-              <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
-                {`Displays the sizes of PRO & ANTI collisions, and PHOTON & BARYON emissions in the pool`}
-              </span>
-            </div>
-          </div>
-          {barChartData && (
-            <div style={{ height: "250px" }}>
-              <Bar data={barChartData} options={barChartData.options} />
-            </div>
-          )}
-        </div>
-        <div className="p-4 rounded-lg">
-          <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
-            <div>{`Events Over Time`}</div>
-            <div className="relative group">
-              <div className="cursor-pointer">&#9432;</div>
-              <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
-                {`Displays the count of PRO & ANTI collisions, and PHOTON & BARYON emissions over time`}
-              </span>
-            </div>
-          </div>
-          {lineChartData && (
-            <div style={{ height: "250px" }}>
-              <Line
-                data={lineChartData}
-                options={lineChartData.options}
-                plugins={lineChartData.plugins}
+            {pieChartDataTokens && (
+              <Pie
+                data={pieChartDataTokens}
+                options={pieChartDataTokens.options}
               />
-            </div>
-          )}
-        </div>
-        <div className="p-4 rounded-lg">
-          <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
-            <div>Global Prediction</div>
-            <div className="relative group">
-              <div className="cursor-pointer">&#9432;</div>
-              <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
-                {`Displays your prediction overlapped against the global prediction`}
-              </span>
-            </div>
+            )}
           </div>
-          {netDistribution && (
-            <div style={{ height: "300px" }}>
-              <Line data={netDistribution} options={netDistribution.options} />
+          <div className="p-4 rounded-lg">
+            <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
+              <div>{"Token Emissions"}</div>
+              <div className="relative group">
+                <div className="cursor-pointer">&#9432;</div>
+                <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
+                  {`Displays the distribution of BARYON & PHOTON emissions in the pool`}
+                </span>
+              </div>
             </div>
-          )}
-        </div>
-        <div className="p-4 rounded-lg">
-          <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
-            <div>{"Ranking"}</div>
-            <div className="relative group">
-              <div className="cursor-pointer">&#9432;</div>
-              <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
-                {`Displays the rankings based on maximum potential profits`}
-              </span>
-            </div>
-          </div>
-          {winnerDistribution && (
-            <div style={{ height: "300px" }}>
-              <Bar
-                data={winnerDistribution}
-                options={winnerDistribution.options}
+            {pieChartDataEmissions && (
+              <Pie
+                data={pieChartDataEmissions}
+                options={pieChartDataEmissions.options}
               />
+            )}
+          </div>
+          <div className="p-4 rounded-lg">
+            <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
+              <div>{`Events Ranges`}</div>
+              <div className="relative group">
+                <div className="cursor-pointer">&#9432;</div>
+                <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
+                  {`Displays the sizes of PRO & ANTI collisions, and PHOTON & BARYON emissions in the pool`}
+                </span>
+              </div>
             </div>
-          )}
+            {barChartData && (
+              <div style={{ height: "250px" }}>
+                <Bar data={barChartData} options={barChartData.options} />
+              </div>
+            )}
+          </div>
+          <div className="p-4 rounded-lg">
+            <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
+              <div>{`Events Over Time`}</div>
+              <div className="relative group">
+                <div className="cursor-pointer">&#9432;</div>
+                <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
+                  {`Displays the count of PRO & ANTI collisions, and PHOTON & BARYON emissions over time`}
+                </span>
+              </div>
+            </div>
+            {lineChartData && (
+              <div style={{ height: "250px" }}>
+                <Line
+                  data={lineChartData}
+                  options={lineChartData.options}
+                  plugins={lineChartData.plugins}
+                />
+              </div>
+            )}
+          </div>
+          <div className="p-4 rounded-lg">
+            <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
+              <div>Global Prediction</div>
+              <div className="relative group">
+                <div className="cursor-pointer">&#9432;</div>
+                <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
+                  {`Displays your prediction overlapped against the global prediction`}
+                </span>
+              </div>
+            </div>
+            {netDistribution && (
+              <div style={{ height: "300px" }}>
+                <Line data={netDistribution} options={netDistribution.options} />
+              </div>
+            )}
+          </div>
+          <div className="p-4 rounded-lg">
+            <div className="flex justify-center gap-2 items-center font-grotesk text-gray-200">
+              <div>{"Ranking"}</div>
+              <div className="relative group">
+                <div className="cursor-pointer">&#9432;</div>
+                <span className="absolute text-sm p-2 bg-gray-800 rounded-md w-64 -translate-x-3/4 lg:-translate-x-1/2 -translate-y-full -mt-6 md:-mt-8 text-center text-gray-300 hidden group-hover:block">
+                  {`Displays the rankings based on maximum potential profits`}
+                </span>
+              </div>
+            </div>
+            {winnerDistribution && (
+              <div style={{ height: "300px" }}>
+                <Bar
+                  data={winnerDistribution}
+                  options={winnerDistribution.options}
+                />
+              </div>
+            )}
+          </div>
         </div>
+      )}
       </div>
     </section>
   );

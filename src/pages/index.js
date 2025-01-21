@@ -456,7 +456,7 @@ const LandingPage = ({ BASE_URL, setTrigger }) => {
     <>
       <section className="min-h-screen pt-16 md:pt-20 flex flex-col items-center relative mt-10 mb-10">
         {/* Hero Section */}
-        <div className="max-w-7xl w-full mb-8 bg-gray-800 border border-gray-700 text-gray-300 p-4 text-center rounded-md">
+        <div className="max-w-7xl w-full bg-gray-800 border border-gray-700 text-gray-300 p-4 text-center rounded-md">
           <div className="flex items-center gap-2">
             <div>
               <svg
@@ -480,83 +480,36 @@ const LandingPage = ({ BASE_URL, setTrigger }) => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-[70%,30%] items-center gap-8 max-w-7xl mx-auto px-4">
-          {/* Hero Text */}
-          <div>
-            <div className="flex flex-row items-center w-full">
-              <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl mb-4 text-gray-300 font-bold font-outfit">
-                PREDICT WITH
-                <br />
-                <span className="text-accent-primary">$ANTI</span> and{" "}
-                <span className="text-accent-secondary">$PRO</span>
-              </h1>
-              {isMobile && (
-                <div className="flex justify-center relative w-40 ml-4 -mt-4">
-                  <div className="absolute w-32 h-32 rounded-full bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 blur-[50px]"></div>
-                  <img
-                    src={`${BASE_URL}/assets/antitoken_logo_large.webp`}
-                    alt="Antitoken Logo"
-                    className="w-32 h-32 rounded-full object-cover border-4 border-gray-800/50 relative z-10 transition-transform duration-200 ease-out"
-                  />
-                </div>
-              )}
-            </div>
-            <p
-              className={`font-open font-medium text-xl md:text-[1.35rem] text-gray-300 ${
-                isMobile ? "mb-2 mt-2" : "mb-6"
-              }`}
-            >
-              Experience the future of prediction markets with Antitoken
-            </p>
-            <div className="flex flex-row w-full justify-between">
-              {isMobile && <div>{""}</div>}
-              <button
-                className="bg-accent-primary hover:opacity-90 text-gray-100 px-8 py-3 rounded-full text-lg font-semibold flex items-center gap-2"
-                onClick={() => setShowBuyTokensModal(true)}
-              >
-                <span>Buy Tokens</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-100 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
 
+        <div className="flex flex-col items-center max-w-7xl px-4 my-6 lg:my-8">
           {/* Hero Image */}
-          {!isMobile && (
-            <div className="flex justify-center relative">
-              <div className="absolute w-72 h-72 rounded-full bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 blur-[50px]"></div>
-              <img
-                src={`${BASE_URL}/assets/antitoken_logo_large.webp`}
-                alt="Antitoken Logo"
-                className="w-72 h-72 rounded-full object-cover border-4 border-gray-800/50 relative z-10 transition-transform duration-200 ease-out"
-              />
+          <div className="flex flex-row items-center w-full">
+            <div className="flex justify-center relative w-40 mr-4">
+              <div className="w-32 h-32">
+                <div className="absolute w-full h-full rounded-full bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 blur-[50px]"></div>
+                <img
+                  src={`${BASE_URL}/assets/antitoken_logo_large.webp`}
+                  alt="Antitoken Logo"
+                  className="w-full h-full rounded-full object-cover border-4 border-gray-800/50 relative z-10 align-self"
+                />
+              </div>
             </div>
-          )}
+            <h1 className="text-3xl md:text-4xl lg:text-5xl text-gray-300 font-bold font-outfit">
+              Predict with <span className="text-accent-primary">$ANTI</span>{" "}
+              and <span className="text-accent-secondary">$PRO</span>
+            </h1>
+          </div>
         </div>
 
         {/* Collider Sections Toggle */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-5 lg:gap-8 max-w-7xl mx-auto">
           {isMobile && <TimeTicker fontSize={11} />}
           <div
-            className={`lg:col-span-1 xl:col-span-2 mx-2 md:mx-0 ${
-              isMobile ? "" : "mt-20"
-            }`}
+            className={`lg:col-span-1 xl:col-span-2 mx-2 md:mx-0`}
           >
             {showCollider ? (
               <div className="text-center">
-                <div className="flex justify-between items-center px-5 py-2 backdrop-blur-sm bg-dark-card rounded-t-lg border border-gray-800">
+                <div className="flex justify-between items-center px-5 py-2 backdrop-blur-sm bg-dark-card rounded-t-lg border-[0.5px] border-gray-800">
                   <div className="flex flex-row items-center">
                     <div
                       className={`w-2 h-2 ${
@@ -742,35 +695,24 @@ const LandingPage = ({ BASE_URL, setTrigger }) => {
             <div
               className={`xl:col-span-3 mx-2 md:mx-0 ${
                 isMetaLoading || isMobile
-                  ? "flex justify-center items-center min-h-[600px]"
+                  ? "flex justify-center items-start min-h-[600px]"
                   : ""
               }`}
             >
-              {!isMetaLoading ? (
-                <DashboardCollider
-                  emissionsData={balances.emissionsData}
-                  collisionsData={balances.collisionsData}
-                  eventsOverTime={balances.eventsOverTime}
-                  colliderDistribution={balances.colliderDistribution}
-                  totalDistribution={balances.totalDistribution}
-                  onRefresh={onRefresh}
-                  connected={wallet.connected}
-                  dynamics={dynamicsCurrent}
-                  holders={bags.wallets}
-                  isMobile={isMobile}
-                  schedule={[balances.startTime, balances.endTime]}
-                />
-              ) : (
-                <div className="flex justify-center items-center w-full">
-                  <BinaryOrbit
-                    size={isMobile ? 300 : 300}
-                    orbitRadius={isMobile ? 80 : 80}
-                    particleRadius={isMobile ? 20 : 20}
-                    padding={10}
-                    invert={false}
-                  />
-                </div>
-              )}
+              <DashboardCollider
+                isMetaLoading={isMetaLoading}
+                emissionsData={balances.emissionsData}
+                collisionsData={balances.collisionsData}
+                eventsOverTime={balances.eventsOverTime}
+                colliderDistribution={balances.colliderDistribution}
+                totalDistribution={balances.totalDistribution}
+                onRefresh={onRefresh}
+                connected={wallet.connected}
+                dynamics={dynamicsCurrent}
+                holders={bags.wallets}
+                isMobile={isMobile}
+                schedule={[balances.startTime, balances.endTime]}
+              />
             </div>
           )}
           {!showCollider && (
@@ -810,7 +752,7 @@ const LandingPage = ({ BASE_URL, setTrigger }) => {
             </div>
           )}
         </div>
-        <div className="backdrop-blur-xl bg-dark-card/50 mt-20 p-12 rounded-2xl border border-gray-800 text-center">
+        <div className="backdrop-blur-xl bg-dark-card/50 mt-20 p-12 rounded-2xl border-[0.5px] border-gray-800 text-center">
           <h2 className="font-grotesk text-3xl font-bold mb-6 bg-gradient-to-r from-accent-primary from-20% to-accent-secondary to-90% bg-clip-text text-transparent">
             Ready to dive in?
           </h2>

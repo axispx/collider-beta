@@ -1306,7 +1306,7 @@ const Collider = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full bg-black border-x border-b border-gray-800 rounded-b-lg p-5 relative">
+    <div className="flex flex-col items-center justify-center w-full bg-black border-x-[0.5px] border-b-[0.5px] border-gray-800 rounded-b-lg p-5 relative">
       <div className="bg-dark-card p-4 rounded w-full mb-4">
         <div className="flex flex-row items-center mb-2">
           <div className="text-2xl text-white text-center font-medium">

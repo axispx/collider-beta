@@ -729,7 +729,7 @@ const DashboardInverter = ({
   ]);
 
   return (
-    <section className="mt-20 text-gray-100">
+    <section className="text-gray-100">
       <div className="flex flex-row justify-between px-4 py-2 text-xl text-gray-300 text-left font-medium border border-gray-800 rounded-t-lg bg-dark-card">
         <h2 className="">Statistics</h2>
         <button
